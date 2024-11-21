@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import UserException from "../exceptions/UserException";
+import UserException from "../exceptions/UserException.ts";
 
 const handleExceptionError = (
     error: Error & Partial<UserException>, 
@@ -13,3 +13,5 @@ const handleExceptionError = (
         message: message
     })
 }
+
+export default handleExceptionError;
