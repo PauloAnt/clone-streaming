@@ -11,7 +11,11 @@ export default class UserRepository{
         
         if (snapshot.empty) return null;
 
-        return snapshot.docs[0].data() as UserDTO;
+        const data = snapshot.docs[0].data();
+
+        const user = new UserDTO(data.username, data.email, data.password);
+
+        return user;
     }
 
     async findById(id: string) : Promise<UserDTO | null>{

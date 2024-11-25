@@ -21,6 +21,10 @@ export default class UserService{
             }
 
             const data = req.body;
+            const passwordEncrypted = await bcrypt.hash(data.password, 10);
+            data.password = passwordEncrypted;
+
+            console.log(data);
             const user : UserDTO | null = await this.#repository.register(data);
 
             return {
@@ -41,19 +45,17 @@ export default class UserService{
             if (!req.body){
                 throw new UserException(http.BAD_REQUEST, "Email ou senha inexistente.");
             }
+            const { username, email, password }: { username: string, email: string, password: string } = req.body;
 
-            const { email, password }: { email: string, password: string } = req.body;
-
-            const data = new UserData(req.body.email, req.body.password);
+            const data = new UserData(username, email);
             const user: UserDTO | null = await this.#repository.findByEmail(data.email);
             
-            if (!user || !bcrypt.compare(password, user.getPassword())){
+            console.log(password, user.getPassword());
+            if (!user || !bcrypt.compareSync(password, user.getPassword())){
                 throw new UserException(http.BAD_REQUEST, "Senha incorreta.");
             }
 
-
             const token = this.#generatedToken(data);
-
             return {
                 status: http.OK,
                 message: "Logado com sucesso.",
@@ -72,10 +74,12 @@ export default class UserService{
 
     #generatedToken(data : UserData): string{
 
-        const passwordEncrypted = bcrypt.hash(data.password, 10);
-        
-        const token = jwt.sign(data, process.env.SECRET_KEY as string, {
-            expiresIn: "1d"
+        const payload = {
+            username: data.username,
+            email: data.email
+        };
+        const token = jwt.sign(payload, process.env.SECRET_KEY as string, {
+            expiresIn: "10h"
         });
 
         return token;

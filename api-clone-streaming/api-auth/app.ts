@@ -1,16 +1,14 @@
-import express from 'express';
+import express, { Application } from 'express';
 import http from 'http-status';
 import dotenv from 'dotenv';
 dotenv.config();
-import UserRouter from "./modules/routes/UserRouter.ts";
-import handleExceptionError from "./modules/middleware/handleExceptionError.ts";
+import UserRouter from "./src/routes/UserRouter.ts";
+import { handleExceptionError } from "./src/middleware/handleExceptionError.ts";
 
-const app = express();
-
-app.use(UserRouter);
+const app: Application = express();
 
 app.use(express.json());
-
+app.use(UserRouter);
 app.use(handleExceptionError);
 
 app.get("/status", (req, res) => {

@@ -1,9 +1,7 @@
 import admin from "firebase-admin";
 import dotenv from 'dotenv';
 dotenv.config();
-import serviceAccount from process.env.DATABASE_ACCOUNT_KEY;
-
-const serviceAccount = JSON.parse(serviceAccount);
+import serviceAccount from "./api-project-97084-firebase-adminsdk-8cwt5-4969878925.json" assert { type: "json" };;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
