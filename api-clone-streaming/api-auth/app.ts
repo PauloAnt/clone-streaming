@@ -4,10 +4,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 import UserRouter from "./src/routes/UserRouter.ts";
 import { handleExceptionError } from "./src/middleware/handleExceptionError.ts";
+import cors from "cors";
 
 const app: Application = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(UserRouter);
 app.use(handleExceptionError);
 
